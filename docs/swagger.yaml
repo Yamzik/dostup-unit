@@ -1,0 +1,183 @@
+definitions:
+  core.PeerSM:
+    properties:
+      publicKey:
+        type: string
+      rx:
+        type: integer
+      telegramId:
+        type: integer
+      tx:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /api/user:
+    delete:
+      parameters:
+      - description: user telegram id
+        in: query
+        name: tid
+        type: integer
+      - description: peer public key
+        in: query
+        name: pub
+        type: string
+      - description: auth password
+        in: header
+        name: auth
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "503":
+          description: Service Unavailable
+      summary: Deletes peer of user by telegram id and peer public key
+    get:
+      parameters:
+      - description: user telegram id
+        in: query
+        name: tid
+        type: integer
+      - description: auth password
+        in: header
+        name: auth
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/core.PeerSM'
+            type: array
+        "400":
+          description: Bad Request
+      summary: Returns all peers on unit that belong to user
+    post:
+      parameters:
+      - description: user telegram id
+        in: query
+        name: tid
+        type: integer
+      - description: auth password
+        in: header
+        name: auth
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.PeerSM'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "503":
+          description: Service Unavailable
+      summary: Adds a peer to user by telegram id and returns created peer
+  /api/user/all:
+    get:
+      parameters:
+      - description: auth password
+        in: header
+        name: auth
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/core.PeerSM'
+            type: array
+      summary: Returns all peers registered on unit
+  /api/user/disable:
+    patch:
+      parameters:
+      - description: user telegram id
+        in: query
+        name: tid
+        type: integer
+      - description: peer public key
+        in: query
+        name: pub
+        type: string
+      - description: auth password
+        in: header
+        name: auth
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Disables peer by telegram id and peer public key
+  /api/user/download:
+    get:
+      parameters:
+      - description: user telegram id
+        in: query
+        name: tid
+        type: integer
+      - description: peer public key
+        in: query
+        name: pub
+        type: string
+      - description: auth password
+        in: header
+        name: auth
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Builds ready-to-use client as string
+  /api/user/enable:
+    patch:
+      parameters:
+      - description: user telegram id
+        in: query
+        name: tid
+        type: integer
+      - description: peer public key
+        in: query
+        name: pub
+        type: string
+      - description: auth password
+        in: header
+        name: auth
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Enables peer by telegram id and peer public key
+swagger: "2.0"

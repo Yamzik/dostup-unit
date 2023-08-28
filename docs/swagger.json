@@ -1,0 +1,287 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/api/user": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Returns all peers on unit that belong to user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user telegram id",
+                        "name": "tid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "auth password",
+                        "name": "auth",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/core.PeerSM"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            },
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Adds a peer to user by telegram id and returns created peer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user telegram id",
+                        "name": "tid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "auth password",
+                        "name": "auth",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.PeerSM"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletes peer of user by telegram id and peer public key",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user telegram id",
+                        "name": "tid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "peer public key",
+                        "name": "pub",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "auth password",
+                        "name": "auth",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/api/user/all": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Returns all peers registered on unit",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "auth password",
+                        "name": "auth",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/core.PeerSM"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/disable": {
+            "patch": {
+                "summary": "Disables peer by telegram id and peer public key",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user telegram id",
+                        "name": "tid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "peer public key",
+                        "name": "pub",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "auth password",
+                        "name": "auth",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/api/user/download": {
+            "get": {
+                "summary": "Builds ready-to-use client as string",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user telegram id",
+                        "name": "tid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "peer public key",
+                        "name": "pub",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "auth password",
+                        "name": "auth",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/user/enable": {
+            "patch": {
+                "summary": "Enables peer by telegram id and peer public key",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user telegram id",
+                        "name": "tid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "peer public key",
+                        "name": "pub",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "auth password",
+                        "name": "auth",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "core.PeerSM": {
+            "type": "object",
+            "properties": {
+                "publicKey": {
+                    "type": "string"
+                },
+                "rx": {
+                    "type": "integer"
+                },
+                "telegramId": {
+                    "type": "integer"
+                },
+                "tx": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+/.devcontainer
+/.vscode
+/Dockerfile
+/Gobuilder.Dockerfile
+/docker-compose.builder.yml
+/docker-compose.yml
