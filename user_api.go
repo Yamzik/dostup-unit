@@ -26,6 +26,7 @@ func (uc *UserController) New(peerService *core.PeerService,
 func (uc *UserController) Use(r *gin.Engine) *UserController {
 	r.GET("/api/user/all", uc.getAllPeers)
 	r.GET("/api/user", uc.getPeersForUser)
+	r.GET("/api/user/specific", uc.getPeerForUser)
 	r.GET("/api/user/download", uc.downloadConfig)
 	r.POST("/api/user", uc.addPeerForUser)
 	r.PATCH("/api/user/disable", uc.disablePeer)
@@ -64,6 +65,33 @@ func (uc *UserController) getPeersForUser(c *gin.Context) {
 	}
 	peers := uc.peerService.GetPeers(tid)
 	c.JSON(http.StatusOK, peers)
+}
+
+// getPeerForUser
+// @Summary Returns specific peer on unit that belong to user
+// @Param	tid    query     uint64  false  "user telegram id"
+// @Param	auth   header    string  false  "auth password"
+// @Produce json
+// @Success 200 {object} core.PeerSM
+// @Failure 409
+// @Failure 400
+// @Router /api/user/specific [get]
+func (uc *UserController) getPeerForUser(c *gin.Context) {
+	tid_s := c.Query("tid")
+	pub := c.Query("pub")
+	tid, err := strconv.ParseUint(tid_s, 10, 64)
+	if err != nil {
+		err = util.DErr(util.InvalidParameter, err.Error()).
+			SetMessage("Expected tid parameter to be unsigned int of 64 bits")
+		c.Error(err)
+		return
+	}
+	peer, err := uc.peerService.GetPeer(tid, pub)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, peer)
 }
 
 // addPeerForUser
