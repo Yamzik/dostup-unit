@@ -66,7 +66,7 @@ func main() {
 	api := r.Group("/api")
 	api.Use(AuthMiddleware(requiredOptions.PwdHash))
 	api.Use(LoggerMiddleware)
-	(&UserController{}).New(peerService, mementoProvider).Use(r)
+	(&UserController{}).New(peerService, mementoProvider).Use(api)
 	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Host = "example.com"
 	docs.SwaggerInfo.Description = "Unit"

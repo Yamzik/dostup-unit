@@ -23,7 +23,7 @@ func (uc *UserController) New(peerService *core.PeerService,
 	uc.mementoProvider = memProvider
 	return uc
 }
-func (uc *UserController) Use(r *gin.Engine) *UserController {
+func (uc *UserController) Use(r *gin.RouterGroup) *UserController {
 	r.GET("/user/all", uc.getAllPeers)
 	r.GET("/user", uc.getPeersForUser)
 	r.GET("/user/specific", uc.getPeerForUser)
