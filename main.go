@@ -16,6 +16,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// @BasePath  /api
 func main() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
@@ -62,8 +63,9 @@ func main() {
 	go SyncTransfer(peerService, mementoProvider, cancel)
 
 	r := gin.Default()
-	r.Use(AuthMiddleware(requiredOptions.PwdHash))
-	r.Use(LoggerMiddleware)
+	api := r.Group("/api")
+	api.Use(AuthMiddleware(requiredOptions.PwdHash))
+	api.Use(LoggerMiddleware)
 	(&UserController{}).New(peerService, mementoProvider).Use(r)
 	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Host = "example.com"
@@ -71,6 +73,6 @@ func main() {
 	docs.SwaggerInfo.Title = "Unit"
 	docs.SwaggerInfo.Version = "0.0.1"
 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	r.GET("/swagger/unit123/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	r.Run(fmt.Sprintf(":%v", options.UnitPort)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

@@ -24,14 +24,14 @@ func (uc *UserController) New(peerService *core.PeerService,
 	return uc
 }
 func (uc *UserController) Use(r *gin.Engine) *UserController {
-	r.GET("/api/user/all", uc.getAllPeers)
-	r.GET("/api/user", uc.getPeersForUser)
-	r.GET("/api/user/specific", uc.getPeerForUser)
-	r.GET("/api/user/download", uc.downloadConfig)
-	r.POST("/api/user", uc.addPeerForUser)
-	r.PATCH("/api/user/disable", uc.disablePeer)
-	r.PATCH("/api/user/enable", uc.enablePeer)
-	r.DELETE("/api/user", uc.deletePeerForUser)
+	r.GET("/user/all", uc.getAllPeers)
+	r.GET("/user", uc.getPeersForUser)
+	r.GET("/user/specific", uc.getPeerForUser)
+	r.GET("/user/download", uc.downloadConfig)
+	r.POST("/user", uc.addPeerForUser)
+	r.PATCH("/user/disable", uc.disablePeer)
+	r.PATCH("/user/enable", uc.enablePeer)
+	r.DELETE("/user", uc.deletePeerForUser)
 	return uc
 }
 
@@ -195,7 +195,7 @@ func (uc *UserController) downloadConfig(c *gin.Context) {
 // @Param	tid    query     uint64  false  "user telegram id"
 // @Param	pub    query     string  false  "peer public key"
 // @Param	auth   header    string  false  "auth password"
-// @Success 200
+// @Success 200 {object} core.PeerSM
 // @Failure 400
 // @Failure 404
 // @Failure 500
@@ -212,7 +212,7 @@ func (uc *UserController) enablePeer(c *gin.Context) {
 		return
 	}
 
-	uc.peerService.EnablePeer(tid, pub)
+	peer, err := uc.peerService.EnablePeer(tid, pub)
 	if err != nil {
 		c.Error(err)
 		return
@@ -220,10 +220,10 @@ func (uc *UserController) enablePeer(c *gin.Context) {
 	err = uc.sync()
 	if err != nil {
 		c.Error(err)
-		c.Status(http.StatusInternalServerError)
+		return
 	}
 
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, peer)
 }
 
 // disablePeer
@@ -231,7 +231,7 @@ func (uc *UserController) enablePeer(c *gin.Context) {
 // @Param	tid    query     uint64  false  "user telegram id"
 // @Param	pub    query     string  false  "peer public key"
 // @Param	auth   header    string  false  "auth password"
-// @Success 200
+// @Success 200 {object} core.PeerSM
 // @Failure 400
 // @Failure 404
 // @Failure 500
@@ -248,7 +248,7 @@ func (uc *UserController) disablePeer(c *gin.Context) {
 		return
 	}
 
-	err = uc.peerService.DisablePeer(tid, pub)
+	peer, err := uc.peerService.DisablePeer(tid, pub)
 	if err != nil {
 		c.Error(err)
 		return
@@ -259,7 +259,7 @@ func (uc *UserController) disablePeer(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, peer)
 }
 
 func (uc *UserController) sync() error {

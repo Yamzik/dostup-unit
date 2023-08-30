@@ -21,6 +21,7 @@ type PeerSM struct {
 	PublicKey  string
 	Tx         uint64
 	Rx         uint64
+	IsEnabled  bool
 }
 
 func (psm *PeerSM) New(p *Peer) *PeerSM {
@@ -28,6 +29,7 @@ func (psm *PeerSM) New(p *Peer) *PeerSM {
 	psm.PublicKey = p.PublicKey
 	psm.Tx = p.Tx
 	psm.Rx = p.Rx
+	psm.IsEnabled = p.IsEnabled
 	return psm
 }
 
@@ -65,7 +67,7 @@ func (ps *PeerService) GetPeer(tid uint64, pub string) (*PeerSM, error) {
 	if err != nil {
 		return nil, err
 	}
-	return new(PeerSM).New(peer), nil
+	return (&PeerSM{}).New(peer), nil
 }
 
 func (ps *PeerService) GetPeerInterface(tid uint64, pub string) (string, error) {
@@ -105,23 +107,23 @@ func (ps *PeerService) Delete(tid uint64, pub string) error {
 	return nil
 }
 
-func (ps *PeerService) DisablePeer(tid uint64, pub string) error {
+func (ps *PeerService) DisablePeer(tid uint64, pub string) (*PeerSM, error) {
 	peer, err := ps.userProvider.GetPeerForUser(tid, pub)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	peer.Disable()
-	return nil
+	return (&PeerSM{}).New(peer), nil
 }
-func (ps *PeerService) EnablePeer(tid uint64, pub string) error {
+func (ps *PeerService) EnablePeer(tid uint64, pub string) (*PeerSM, error) {
 	peer, err := ps.userProvider.GetPeerForUser(tid, pub)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	peer.Enable()
 	peer.SRx = peer.Rx
 	peer.STx = peer.Tx
-	return nil
+	return (&PeerSM{}).New(peer), nil
 }
 
 func (ps *PeerService) MakeConfig() (string, error) {
